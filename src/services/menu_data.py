@@ -6,14 +6,15 @@ from models.ingredient import Ingredient
 
 class MenuData:
     def __init__(self, source_path):
-        self.source_path = source_path
         self.dishes = set()
-        self._read_csv()
+        self.source_path = source_path
+        self._read_csv(source_path)
 
-    def _read_csv(self):
-        with open(self.source_path, newline="") as csv_file:
+    def _read_csv(self, source_path):
+        with open(source_path) as csv_file:
             reader = csv.reader(csv_file)
             next(reader)
+
             for row in reader:
                 (
                     dish_name,
@@ -21,6 +22,7 @@ class MenuData:
                     ingredient_name,
                     ingredient_quantity,
                 ) = row
+
                 self._add_dish(
                     dish_name,
                     float(dish_price),
@@ -32,6 +34,7 @@ class MenuData:
         self, dish_name, dish_price, ingredient_name, ingredient_quantity
     ):
         dish = self._get_dish_by_name(dish_name)
+
         if not dish:
             dish = Dish(dish_name, dish_price)
             self.dishes.add(dish)
@@ -43,4 +46,5 @@ class MenuData:
         for dish in self.dishes:
             if dish.name == dish_name:
                 return dish
+
         return None
